@@ -1,10 +1,10 @@
 # svgparser
 
-Library for parsing and manipulating SVG files.
+Library for parsing and manipulating SVG files. We've made some changes to original repo and soon we will update this, sorry in advance.
 
 ### Installation
 
-	go get github.com/JoshVarga/svgparser
+	go get github.com/garaekz/svgparser
 
 ### Features
 
