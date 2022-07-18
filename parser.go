@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
+
 	"golang.org/x/net/html/charset"
 )
 
@@ -20,8 +21,8 @@ func (err ValidationError) Error() string {
 
 // Element is a representation of an SVG element.
 type Element struct {
-	Name       string
-	Attributes map[string]string
+	Name       xml.Name
+	Attributes []xml.Attr
 	Children   []*Element
 	Content    string
 }
@@ -29,12 +30,8 @@ type Element struct {
 // NewElement creates element from decoder token.
 func NewElement(token xml.StartElement) *Element {
 	element := &Element{}
-	attributes := make(map[string]string)
-	for _, attr := range token.Attr {
-		attributes[attr.Name.Local] = attr.Value
-	}
-	element.Name = token.Name.Local
-	element.Attributes = attributes
+	element.Name = token.Name
+	element.Attributes = token.Attr
 	return element
 }
 
@@ -109,7 +106,7 @@ func (e *Element) Decode(decoder *xml.Decoder) error {
 			}
 
 		case xml.EndElement:
-			if element.Name.Local == e.Name {
+			if element.Name == e.Name {
 				return nil
 			}
 		}

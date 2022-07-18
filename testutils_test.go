@@ -1,12 +1,13 @@
 package svgparser_test
 
 import (
+	"encoding/xml"
 	"strings"
 
-	"github.com/JoshVarga/svgparser"
+	"github.com/garaekz/svgparser"
 )
 
-func element(name string, attrs map[string]string) *svgparser.Element {
+func element(name xml.Name, attrs []xml.Attr) *svgparser.Element {
 	return &svgparser.Element{
 		Name:       name,
 		Attributes: attrs,

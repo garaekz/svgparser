@@ -1,9 +1,10 @@
 package svgparser_test
 
 import (
+	"encoding/xml"
 	"testing"
 
-	"github.com/JoshVarga/svgparser"
+	"github.com/garaekz/svgparser"
 )
 
 func testElement() *svgparser.Element {
@@ -44,9 +45,20 @@ func TestFindAll(t *testing.T) {
 	svgElement := testElement()
 
 	equalSlices(t, "Find", []*svgparser.Element{
-		element("rect", map[string]string{"width": "5", "height": "3", "id": "inFirst"}),
-		element("rect", map[string]string{"width": "5", "height": "2", "id": "inFirst"}),
-		element("rect", map[string]string{"width": "5", "height": "1"}),
+		element(xml.Name{Space: "", Local: "rect"}, []xml.Attr{
+			{Name: xml.Name{Space: "", Local: "width"}, Value: "5"},
+			{Name: xml.Name{Space: "", Local: "height"}, Value: "3"},
+			{Name: xml.Name{Space: "", Local: "id"}, Value: "inFirst"},
+		}),
+		element(xml.Name{Space: "", Local: "rect"}, []xml.Attr{
+			{Name: xml.Name{Space: "", Local: "width"}, Value: "5"},
+			{Name: xml.Name{Space: "", Local: "height"}, Value: "2"},
+			{Name: xml.Name{Space: "", Local: "id"}, Value: "inFirst"},
+		}),
+		element(xml.Name{Space: "", Local: "rect"}, []xml.Attr{
+			{Name: xml.Name{Space: "", Local: "width"}, Value: "5"},
+			{Name: xml.Name{Space: "", Local: "height"}, Value: "1"},
+		}),
 	}, svgElement.FindAll("rect"))
 
 	equalSlices(t, "Find", []*svgparser.Element{}, svgElement.FindAll("circle"))
@@ -56,16 +68,28 @@ func TestFindID(t *testing.T) {
 	svgElement := testElement()
 
 	equals(t, "Find", &svgparser.Element{
-		Name:       "g",
-		Attributes: map[string]string{"id": "second"},
-		Children: []*svgparser.Element{
-			element("path", map[string]string{"d": "M50 50 Q50 100 100 100"}),
-			element("rect", map[string]string{"width": "5", "height": "1"}),
+		Name: xml.Name{Space: "", Local: "g"},
+		Attributes: []xml.Attr{
+			{Name: xml.Name{Space: "", Local: "id"}, Value: "second"},
 		},
-	}, svgElement.FindID("second"))
+		Children: []*svgparser.Element{
+			element(xml.Name{Space: "", Local: "path"}, []xml.Attr{
+				{Name: xml.Name{Space: "", Local: "d"}, Value: "M50 50 Q50 100 100 100"},
+			}),
+			element(xml.Name{Space: "", Local: "rect"}, []xml.Attr{
+				{Name: xml.Name{Space: "", Local: "width"}, Value: "5"},
+				{Name: xml.Name{Space: "", Local: "height"}, Value: "1"},
+			}),
+		},
+	},
+		svgElement.FindID("second"))
 
 	equals(t, "Find",
-		element("rect", map[string]string{"width": "5", "height": "3", "id": "inFirst"}),
+		element(xml.Name{Space: "", Local: "rect"}, []xml.Attr{
+			{Name: xml.Name{Space: "", Local: "width"}, Value: "5"},
+			{Name: xml.Name{Space: "", Local: "height"}, Value: "3"},
+			{Name: xml.Name{Space: "", Local: "id"}, Value: "inFirst"},
+		}),
 		svgElement.FindID("inFirst"),
 	)
 

@@ -1,9 +1,10 @@
 package svgparser_test
 
 import (
+	"encoding/xml"
 	"testing"
 
-	"github.com/JoshVarga/svgparser"
+	"github.com/garaekz/svgparser"
 )
 
 func TestParser(t *testing.T) {
@@ -18,13 +19,20 @@ func TestParser(t *testing.T) {
 		</svg>
 		`,
 			svgparser.Element{
-				Name: "svg",
-				Attributes: map[string]string{
-					"width":  "100",
-					"height": "100",
+				Name: xml.Name{Space: "", Local: "svg"},
+				Attributes: []xml.Attr{
+					{Name: xml.Name{Space: "", Local: "width"}, Value: "100"},
+					{Name: xml.Name{Space: "", Local: "height"}, Value: "100"},
 				},
 				Children: []*svgparser.Element{
-					element("circle", map[string]string{"cx": "50", "cy": "50", "r": "40", "fill": "red"}),
+					element(xml.Name{Space: "", Local: "circle"},
+						[]xml.Attr{
+							{Name: xml.Name{Space: "", Local: "cx"}, Value: "50"},
+							{Name: xml.Name{Space: "", Local: "cy"}, Value: "50"},
+							{Name: xml.Name{Space: "", Local: "r"}, Value: "40"},
+							{Name: xml.Name{Space: "", Local: "fill"}, Value: "red"},
+						},
+					),
 				},
 			},
 		},
@@ -39,23 +47,34 @@ func TestParser(t *testing.T) {
 		</svg>
 		`,
 			svgparser.Element{
-				Name: "svg",
-				Attributes: map[string]string{
-					"width":  "450",
-					"height": "400",
+				Name: xml.Name{Space: "", Local: "svg"},
+				Attributes: []xml.Attr{
+					{Name: xml.Name{Space: "", Local: "height"}, Value: "400"},
+					{Name: xml.Name{Space: "", Local: "width"}, Value: "450"},
 				},
 				Children: []*svgparser.Element{
-					&svgparser.Element{
-						Name: "g",
-						Attributes: map[string]string{
-							"stroke":       "black",
-							"stroke-width": "3",
-							"fill":         "black",
+					{
+						Name: xml.Name{Space: "", Local: "g"},
+						Attributes: []xml.Attr{
+							{Name: xml.Name{Space: "", Local: "stroke"}, Value: "black"},
+							{Name: xml.Name{Space: "", Local: "stroke-width"}, Value: "3"},
+							{Name: xml.Name{Space: "", Local: "fill"}, Value: "black"},
 						},
 						Children: []*svgparser.Element{
-							element("path", map[string]string{"id": "AB", "d": "M 100 350 L 150 -300", "stroke": "red"}),
-							element("path", map[string]string{"id": "BC", "d": "M 250 50 L 150 300", "stroke": "red"}),
-							element("path", map[string]string{"d": "M 175 200 L 150 0", "stroke": "green"}),
+							element(xml.Name{Space: "", Local: "path"}, []xml.Attr{
+								{Name: xml.Name{Space: "", Local: "id"}, Value: "AB"},
+								{Name: xml.Name{Space: "", Local: "d"}, Value: "M 100 350 L 150 -300"},
+								{Name: xml.Name{Space: "", Local: "stroke"}, Value: "red"},
+							}),
+							element(xml.Name{Space: "", Local: "path"}, []xml.Attr{
+								{Name: xml.Name{Space: "", Local: "id"}, Value: "BC"},
+								{Name: xml.Name{Space: "", Local: "d"}, Value: "M 250 50 L 150 300"},
+								{Name: xml.Name{Space: "", Local: "stroke"}, Value: "red"},
+							}),
+							element(xml.Name{Space: "", Local: "path"}, []xml.Attr{
+								{Name: xml.Name{Space: "", Local: "d"}, Value: "M 175 200 L 150 0"},
+								{Name: xml.Name{Space: "", Local: "stroke"}, Value: "green"},
+							}),
 						},
 					},
 				},
