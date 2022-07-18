@@ -1,7 +1,5 @@
 package svgparser
 
-import "fmt"
-
 // FindID finds the first child with the specified ID.
 func (e *Element) FindID(id string) *Element {
 	for _, child := range e.Children {
@@ -33,7 +31,6 @@ func (e *Element) FindAll(name string) []*Element {
 func (e *Element) FindAllBySpaceAndLocalName(space, localName string) []*Element {
 	var elements []*Element
 	for _, child := range e.Children {
-		fmt.Printf("%+v\n", child.Name)
 		if child.Name.Space == space && child.Name.Local == localName {
 			elements = append(elements, child)
 		}

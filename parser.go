@@ -131,3 +131,13 @@ func Parse(source io.Reader, validate bool) (*Element, error) {
 	}
 	return element, nil
 }
+
+// GetAttribute returns the value of the attribute with the given name.
+func (e *Element) GetAttribute(name string) string {
+	for _, attr := range e.Attributes {
+		if attr.Name.Local == name {
+			return attr.Value
+		}
+	}
+	return ""
+}
